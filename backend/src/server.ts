@@ -1,6 +1,11 @@
-import app from './app';
-const PORT = process.env.PORT || 3000;
+import express from 'express';
+import taskRoutes from './routes/task.routes';
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const app = express();
+app.use(express.json());
+
+app.use('/tasks', taskRoutes);
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });

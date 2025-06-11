@@ -1,44 +1,92 @@
-import { Request, Response, NextFunction } from 'express';
-import * as TaskService from '../services/task.service';
-import { logger }  from '../utils/logger'
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 
-export async function getAllTasks(req: Request, res: Response, next: NextFunction) {
-  try {
-    await TaskService.getAllTasks(req, res, next);
-  } catch (error) {
-    logger.error('Failed to get all tasks', error);
-    next(error);
+const prisma = new PrismaClient();
+
+export class TaskController {
+  constructor() {
+    this.getAllTasks = this.getAllTasks.bind(this);
+    this.createTask = this.createTask.bind(this);
+    this.updateTask = this.updateTask.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.toggleTaskDone = this.toggleTaskDone.bind(this);
   }
-}
 
-export async function createTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { title, completed = false } = req.body;
-    if (!title) {
-      return res.status(400).json({ error: 'Title is required' });
+  async getAllTasks(_req: Request, res: Response) {
+    try {
+      const tasks = await prisma.task.findMany();
+      res.json(tasks);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch tasks' });
     }
-
-    await TaskService.createTask(req, res, next);
-  } catch (error) {
-    logger.error('Failed to create task', error);
-    next(error);
   }
-}
 
-export async function updateTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    await TaskService.updateTask(req, res, next);
-  } catch (error) {
-    logger.error(`Failed to update task with ID ${req.params.id}`, error);
-    next(error);
+  async createTask(req: Request, res: Response) {
+    try {
+      const { title, description } = req.body;
+      const task = await prisma.task.create({
+        data: {
+          title,
+          description,
+        },
+      });
+      res.status(201).json(task);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to create task' });
+    }
   }
-}
 
-export async function deleteTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    await TaskService.deleteTask(req, res, next);
-  } catch (error) {
-    logger.error(`Failed to delete task with ID ${req.params.id}`, error);
-    next(error);
+  async updateTask(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { title, description } = req.body;
+      const task = await prisma.task.update({
+        where: { id: Number(id) },
+        data: {
+          title,
+          description,
+        },
+      });
+      res.json(task);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update task' });
+    }
+  }
+
+  async deleteTask(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await prisma.task.delete({
+        where: { id: Number(id) },
+      });
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete task' });
+    }
+  }
+
+  async toggleTaskDone(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const task = await prisma.task.findUnique({
+        where: { id: Number(id) },
+      });
+
+      if (!task) {
+        res.status(404).json({ error: 'Task not found' });
+        return;
+      }
+
+      const updatedTask = await prisma.task.update({
+        where: { id: Number(id) },
+        data: {
+          done: !task.done,
+        },
+      });
+
+      res.json(updatedTask);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to toggle task status' });
+    }
   }
 }

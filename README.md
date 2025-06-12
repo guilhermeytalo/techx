@@ -2,7 +2,7 @@
 Infraestrutura e Configuração
  - [x] Inicializar repositório Git com .gitignore adequado.
 
- - [ ] Criar pasta frontend com Angular (ng new frontend).
+ - [x] Criar pasta frontend com Angular (ng new frontend).
 
  - [x] Criar pasta backend com Node.js + TypeScript.
 
@@ -10,7 +10,7 @@ Infraestrutura e Configuração
 
  - [x] Configurar o banco de dados MySQL (tabela de tarefas).
 
- - [-] Configurar ORM (Ex: Prisma ou TypeORM) no backend.
+ - [x] Configurar ORM (Ex: Prisma ou TypeORM) no backend.
 
  - [x] Criar .env para configs sensíveis.
 

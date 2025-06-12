@@ -1,20 +1,4 @@
-<div class="board">
-  <div class="column">
-    <h3>Tarefas</h3>
-    <div
-      *ngFor="let task of availableTasks"
-      class="task"
-      [pDraggable]="true"
-      [dragData]="task"
-    >
-      {{ task.title }}
-    </div>
-  </div>
 
-  <div class="column drop-zone" [pDroppable]="true" (onDrop)="onDrop($event)">
-    <h3>Em Progresso</h3>
-    <div class="task" *ngFor="let task of inProgressTasks">
-      {{ task.title }}
-    </div>
-  </div>
+<div class="card flex justify-center">
+  <p-button label="Check" />
 </div>

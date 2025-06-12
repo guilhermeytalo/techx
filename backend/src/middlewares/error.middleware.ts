@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { logger } from '../utils/logger';
 
 export function errorHandler(
   err: any,
@@ -8,5 +9,18 @@ export function errorHandler(
 ) {
   const status = err.status || 500;
   const message = err.message || 'Internal Server Error';
-  res.status(status).json({ error: message });
+
+  logger.error(`Error: ${message}`, {
+    method: req.method,
+    url: req.originalUrl,
+    status,
+    stack: err.stack,
+  });
+
+  const response = {
+    error: message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
+  };
+
+  res.status(status).json(response);
 }

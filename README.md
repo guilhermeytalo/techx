@@ -8,7 +8,7 @@ Infraestrutura e Configuração
 
  - [x] Configurar Docker para backend e banco MySQL.
 
- - [ ] Configurar o banco de dados MySQL (tabela de tarefas).
+ - [x] Configurar o banco de dados MySQL (tabela de tarefas).
 
  - [-] Configurar ORM (Ex: Prisma ou TypeORM) no backend.
 
@@ -17,7 +17,7 @@ Infraestrutura e Configuração
 Backend - API RESTful com Node.js + TypeScript
  - [x] Configurar estrutura do projeto (src/controllers, routes, services, etc.).
 
- - [ ] Criar entidade Task com campos: id, title, description, done, createdAt, updatedAt.
+ - [x] Criar entidade Task com campos: id, title, description, done, createdAt, updatedAt.
 
  Criar endpoints:
 
@@ -29,9 +29,9 @@ Backend - API RESTful com Node.js + TypeScript
 
  - [x] DELETE /tasks/:id – deletar tarefa.
 
- - [ ]  PATCH /tasks/:id/done – marcar como concluída/não concluída.
+ - [x]  PATCH /tasks/:id/done – marcar como concluída/não concluída.
 
- - [ ] Conectar à base de dados MySQL.
+ - [x] Conectar à base de dados MySQL.(sendo feito via docker)
 
 🔐 Extra:
  - [ ] Implementar autenticação com JWT.
@@ -65,3 +65,7 @@ Frontend - Angular
 
 - [ ]  Proteger rotas com AuthGuard.
 
+# Comamndos para rodar 
+docker compose up --build
+## enquanto o docker estiver iniciado rodar
+docker compose exec backend npx prisma db push

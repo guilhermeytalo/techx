@@ -1,58 +1,77 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
+import { TaskService } from '../services/task.service';
 
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+export class TaskController {
+  private taskService: TaskService;
 
-let tasks: Task[] = [];
-let nextId = 1;
-
-export function getAllTasks(req: Request, res: Response) {
-  res.json(tasks);
-}
-
-export function createTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { title, completed = false } = req.body;
-    if (!title) {
-      return res.status(400).json({ error: 'Title is required' });
-    }
-    const task: Task = { id: nextId++, title, completed };
-    tasks.push(task);
-    res.status(201).json(task);
-  } catch (err) {
-    next(err);
+  constructor() {
+    this.taskService = new TaskService();
+    this.getAllTasks = this.getAllTasks.bind(this);
+    this.createTask = this.createTask.bind(this);
+    this.updateTask = this.updateTask.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.toggleTaskDone = this.toggleTaskDone.bind(this);
   }
-}
 
-export function updateTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    const id = parseInt(req.params.id, 10);
-    const { title, completed } = req.body;
-    const task = tasks.find((t) => t.id === id);
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
+  async getAllTasks(_req: Request, res: Response) {
+    try {
+      const tasks = await this.taskService.getAllTasks();
+      res.json(tasks);
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to fetch tasks' });
     }
-    if (title !== undefined) task.title = title;
-    if (completed !== undefined) task.completed = completed;
-    res.json(task);
-  } catch (err) {
-    next(err);
   }
-}
 
-export function deleteTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    const id = parseInt(req.params.id, 10);
-    const index = tasks.findIndex((t) => t.id === id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Task not found' });
+  async createTask(req: Request, res: Response) {
+    try {
+      const { title, description, completed } = req.body;
+      const task = await this.taskService.createTask({ title, description, completed });
+      res.status(201).json(task);
+    } catch (error: any) {
+      res.status(500).json({ error: 'Failed to create task' });
     }
-    tasks.splice(index, 1);
-    res.status(204).send();
-  } catch (err) {
-    next(err);
+  }
+
+  async updateTask(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const { title, description, completed } = req.body;
+      const task = await this.taskService.updateTask(id, { title, description, completed });
+      res.json(task);
+    } catch (error: any) {
+      if (error.message === 'Task not found') {
+        res.status(404).json({ error: 'Task not found' });
+      } else {
+        res.status(500).json({ error: 'Failed to update task' });
+      }
+    }
+  }
+
+  async deleteTask(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await this.taskService.deleteTask(id);
+      res.status(204).send();
+    } catch (error: any) {
+      if (error.message === 'Task not found') {
+        res.status(404).json({ error: 'Task not found' });
+      } else {
+        res.status(500).json({ error: 'Failed to delete task' });
+      }
+    }
+  }
+
+  async toggleTaskDone(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const task = await this.taskService.toggleTaskCompleted(id);
+      res.json(task);
+    } catch (error: any) {
+      if (error.message === 'Task not found') {
+        res.status(404).json({ error: 'Task not found' });
+      } else {
+        res.status(500).json({ error: 'Failed to toggle task status' });
+      }
+    }
   }
 }

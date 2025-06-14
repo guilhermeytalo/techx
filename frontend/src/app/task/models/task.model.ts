@@ -12,9 +12,18 @@ export interface CreateTaskInput {
     description?: string;
     completed?: boolean;
   }
-  
+
   export interface UpdateTaskInput {
     title?: string;
     description?: string;
     completed?: boolean;
   }
+
+export interface SelectItem<T = any> {
+  label?: string;
+  value: T;
+  styleClass?: string;
+  icon?: string;
+  title?: string;
+  disabled?: boolean;
+}

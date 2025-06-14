@@ -27,7 +27,7 @@ export class TaskService {
   }
 
   updateTask(id: number, data: UpdateTaskInput): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<Task>(`${this.apiUrl}/${id}`, data);
   }
 
   deleteTask(id: number): Observable<Task> {
@@ -35,6 +35,6 @@ export class TaskService {
   }
 
   toggleTaskCompleted(id: number): Observable<Task> {
-    return this.http.patch<Task>(`${this.apiUrl}/${id}/toggle`, {});
+    return this.http.patch<Task>(`${this.apiUrl}/${id}/done`, {});
   }
 }

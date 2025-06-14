@@ -3,24 +3,30 @@
     <p-table [value]="tasks" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
         <ng-template #header>
             <tr>
-                <th style="width:20%">Code</th>
-                <th style="width:20%">Name</th>
-                <th style="width:20%">Inventory Status</th>
-                <th style="width:20%">Price</th>
-                <th style="width:20%"></th>
+                <th style="width:10%">ID</th>
+                <th style="width:35%">Título</th>
+                <th style="width:35%">Descrição</th>
+                <th style="width:10%">Status</th>
+                <th style="width:10%">Ações</th>
             </tr>
         </ng-template>
         <ng-template #body let-task let-editing="editing" let-ri="rowIndex">
             <tr [pEditableRow]="task">
                 <td>
+                    {{ task.id }}
+                </td>
+                <td>
                     <p-cellEditor>
                         <ng-template #input>
                             <input
-                                pInputText type="text"
-                                [(ngModel)]="task.code" />
+                                pInputText 
+                                type="text"
+                                [(ngModel)]="task.title"
+                                required 
+                                style="width: 100%" />
                         </ng-template>
                         <ng-template #output>
-                            {{task.code}}
+                            {{ task.title }}
                         </ng-template>
                     </p-cellEditor>
                 </td>
@@ -28,12 +34,13 @@
                     <p-cellEditor>
                         <ng-template #input>
                             <input
-                                pInputText type="text"
-                                [(ngModel)]="task.name"
-                                required />
+                                pInputText 
+                                type="text"
+                                [(ngModel)]="task.description"
+                                style="width: 100%" />
                         </ng-template>
                         <ng-template #output>
-                            {{task.name}}
+                            {{ task.description }}
                         </ng-template>
                     </p-cellEditor>
                 </td>
@@ -43,67 +50,60 @@
                             <p-select
                                 [options]="statuses"
                                 appendTo="body"
-                                [(ngModel)]="task.inventoryStatus"
+                                [(ngModel)]="task.completed"
+                                optionLabel="label"
+                                optionValue="value"
                                 [style]="{'width':'100%'}" />
                         </ng-template>
                         <ng-template #output>
                             <p-tag
-                                [value]="task.inventoryStatus"
-                                [severity]="getSeverity(task.inventoryStatus)" />
+                                [value]="getStatusLabel(task.completed)"
+                                [severity]="getSeverity(task.completed)" />
                         </ng-template>
                     </p-cellEditor>
                 </td>
                 <td>
-                    <p-cellEditor>
-                        <ng-template #input>
-                            <input
-                                pInputText type="text"
-                                [(ngModel)]="task.price" />
-                        </ng-template>
-                        <ng-template #output>
-                            {{task.price | currency: 'USD'}}
-                        </ng-template>
-                    </p-cellEditor>
-                </td>
-                <td>
-            <div class="flex items-center justify-center gap-2">
-                <button
-                    *ngIf="!editing"
-                    pButton
-                    pRipple
-                    type="button"
-                    pInitEditableRow
-                    pButtonIcon="pi pi-pencil"
-                    (click)="onRowEditInit(task)"
-                    text
-                    rounded
-                    severity="secondary"
-                ></button>
-                <button
-                    *ngIf="editing"
-                    pButton
-                    pRipple
-                    type="button"
-                    pSaveEditableRow
-                    pButtonIcon="pi pi-check"
-                    (click)="onRowEditSave(task)"
-                    text
-                    rounded
-                    severity="secondary"
-                ></button>
-                <button
-                    *ngIf="editing"
-                    pButton
-                    pRipple
-                    type="button"
-                    pCancelEditableRow
-                    pButtonIcon="pi pi-times"
-                    (click)="onRowEditCancel(task, ri)"
-                    text
-                    rounded
-                    severity="secondary"
-                ></button>
-            </div>
+                    <div class="flex items-center justify-center gap-2">
+                        <button
+                            *ngIf="!editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pInitEditableRow
+                            icon="pi pi-pencil"
+                            (click)="onRowEditInit(task)"
+                            text
+                            rounded
+                            severity="secondary"
+                            size="small">
+                        </button>
+                        <button
+                            *ngIf="editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pSaveEditableRow
+                            icon="pi pi-check"
+                            (click)="onRowEditSave(task)"
+                            text
+                            rounded
+                            severity="success"
+                            size="small">
+                        </button>
+                        <button
+                            *ngIf="editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pCancelEditableRow
+                            icon="pi pi-times"
+                            (click)="onRowEditCancel(task, ri)"
+                            text
+                            rounded
+                            severity="secondary"
+                            size="small">
+                        </button>
+                    </div>
                 </td>
             </tr>
         </ng-template>

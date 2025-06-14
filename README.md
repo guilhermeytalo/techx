@@ -2,7 +2,7 @@
 Infraestrutura e Configuração
  - [x] Inicializar repositório Git com .gitignore adequado.
 
- - [ ] Criar pasta frontend com Angular (ng new frontend).
+ - [x] Criar pasta frontend com Angular (ng new frontend).
 
  - [x] Criar pasta backend com Node.js + TypeScript.
 
@@ -10,7 +10,7 @@ Infraestrutura e Configuração
 
  - [x] Configurar o banco de dados MySQL (tabela de tarefas).
 
- - [-] Configurar ORM (Ex: Prisma ou TypeORM) no backend.
+ - [x] Configurar ORM (Ex: Prisma ou TypeORM) no backend.
 
  - [x] Criar .env para configs sensíveis.
 
@@ -36,7 +36,7 @@ Backend - API RESTful com Node.js + TypeScript
 🔐 Extra:
  - [ ] Implementar autenticação com JWT.
 
- - [ ] Criar User model.
+ - [x] Criar User model.
 
  - [ ] Criar rotas de login, register, auth middleware.
 
@@ -46,17 +46,17 @@ Backend - API RESTful com Node.js + TypeScript
  - [ ] Integrar MongoDB para armazenar observações, anexos ou logs de histórico das tarefas.
 
 Frontend - Angular
- - [ ] Criar componente de listagem de tarefas (task-list).
+ - [x] Criar componente de listagem de tarefas (task-list).
 
- - [ ] Criar componente de formulário para adicionar/editar tarefas (task-form).
+ - [x] Criar componente de formulário para adicionar/editar tarefas (task-form).
 
- - [ ] Criar serviço Angular para consumir API do backend.
+ - [x] Criar serviço Angular para consumir API do backend.
 
- - [ ] Exibir todas as tarefas na home.
+ - [x] Exibir todas as tarefas na home.
 
- - [ ] Permitir criar, editar, remover, marcar como concluída.
+ - [x] Permitir criar, editar, remover, marcar como concluída.
 
- - [ ] Estilizar a interface com CSS ou biblioteca como Angular Material.
+ - [x] Estilizar a interface com CSS ou biblioteca como Angular Material.
 
 🔐 Extra:
  - [ ] Criar tela de login e registro.

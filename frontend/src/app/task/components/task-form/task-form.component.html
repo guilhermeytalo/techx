@@ -1,0 +1,60 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <div>
+        <div class="col-12">
+            <label for="title" class="block text-900 font-medium mb-2">Título*</label>
+            <input 
+                id="title"
+                type="text" 
+                pInputText 
+                formControlName="title"
+                class="w-full" 
+                [class.ng-invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched"
+                placeholder="Digite o título da tarefa" />
+            <small 
+                class="p-error block" 
+                *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+                Título é obrigatório
+            </small>
+        </div>
+
+        <div class="col-12 pt-2">
+            <label for="description" class="block text-900 font-medium mb-2">Descrição</label>
+            <textarea 
+                id="description"
+                pInputTextarea 
+                formControlName="description"
+                class="w-full" 
+                rows="3"
+                placeholder="Digite a descrição da tarefa">
+            </textarea>
+        </div>
+
+        <div class="col-12">
+            <div class="flex items-center">
+                <p-checkbox 
+                    inputId="completed" 
+                    formControlName="completed"
+                    [binary]="true">
+                </p-checkbox>
+                <label for="completed" class="ml-2">Marcar como concluída</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-4">
+        <p-button 
+            label="Cancelar" 
+            icon="pi pi-times" 
+            (click)="onCancel()"
+            [text]="true"
+            severity="secondary">
+        </p-button>
+        <p-button 
+            label="Salvar" 
+            icon="pi pi-check" 
+            type="submit"
+            [disabled]="taskForm.invalid || isSubmitting"
+            [loading]="isSubmitting">
+        </p-button>
+    </div>
+</form>

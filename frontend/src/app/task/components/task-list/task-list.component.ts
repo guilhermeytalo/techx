@@ -10,6 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+import { TaskFormComponent } from '../task-form/task-form.component';
 
 @Component({
   selector: 'app-task-list',
@@ -21,7 +23,9 @@ import { InputTextModule } from 'primeng/inputtext';
     TagModule,
     SelectModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    DialogModule,
+    TaskFormComponent
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss'
@@ -30,19 +34,63 @@ export class TaskListComponent {
   tasks!: Task[];
   statuses!: SelectItem[];
   clonedTasks: { [s: string]: Task } = {};
+  displayTaskForm = false;
 
   constructor(private tasksService: TaskService, private messageService: MessageService) {
   }
 
   ngOnInit() {
-    this.tasksService.getAllTasks().subscribe((data) => {
-      this.tasks = data;
-    });
+    this.loadTasks();
 
     this.statuses = [
       { label: 'Pendente', value: false },
       { label: 'Concluída', value: true }
     ];
+  }
+
+  loadTasks() {
+    this.tasksService.getAllTasks().subscribe((data) => {
+      this.tasks = data;
+    });
+  }
+
+  showTaskForm() {
+    this.displayTaskForm = true;
+  }
+
+  onTaskCreated(task: Task) {
+    this.tasks = [...this.tasks, task];
+    this.displayTaskForm = false;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Tarefa criada com sucesso'
+    });
+  }
+
+  onFormCancelled() {
+    this.displayTaskForm = false;
+  }
+
+  deleteTask(task: Task) {
+    this.tasksService.deleteTask(task.id).subscribe({
+      next: () => {
+        this.tasks = this.tasks.filter(t => t.id !== task.id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Tarefa excluída com sucesso'
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao excluir tarefa:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao excluir a tarefa'
+        });
+      }
+    });
   }
 
   onRowEditInit(task: Task) {

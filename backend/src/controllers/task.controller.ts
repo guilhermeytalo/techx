@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { TaskService } from '../services/task.service';
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: number;
+  };
+}
+
 export class TaskController {
   private taskService: TaskService;
 
@@ -13,9 +19,12 @@ export class TaskController {
     this.toggleTaskDone = this.toggleTaskDone.bind(this);
   }
 
-  async getAllTasks(_req: Request, res: Response) {
+  async getAllTasks(_req: AuthenticatedRequest, res: Response) {
     try {
-      const userId = _req.user?.userId; 
+      const userId = _req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
       const tasks = await this.taskService.getAllTasks(userId);
       res.json(tasks);
     } catch (error: any) {
@@ -23,10 +32,13 @@ export class TaskController {
     }
   }
 
-  async createTask(req: Request, res: Response) {
+  async createTask(req: AuthenticatedRequest, res: Response) {
     try {
       const { title, description, completed } = req.body;
       const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
 
       const task = await this.taskService.createTask({ title, description, completed, userId });
       res.status(201).json(task);
@@ -35,11 +47,15 @@ export class TaskController {
     }
   }
 
-  async updateTask(req: Request, res: Response) {
+  async updateTask(req: AuthenticatedRequest, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
       const { title, description, completed } = req.body;
-      const task = await this.taskService.updateTask(id, { title, description, completed });
+      const task = await this.taskService.updateTask(id, userId, { title, description, completed });
       res.json(task);
     } catch (error: any) {
       if (error.message === 'Task not found') {
@@ -50,10 +66,14 @@ export class TaskController {
     }
   }
 
-  async deleteTask(req: Request, res: Response) {
+  async deleteTask(req: AuthenticatedRequest, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
-      await this.taskService.deleteTask(id);
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+      await this.taskService.deleteTask(id, userId);
       res.status(204).send();
     } catch (error: any) {
       if (error.message === 'Task not found') {
@@ -64,10 +84,14 @@ export class TaskController {
     }
   }
 
-  async toggleTaskDone(req: Request, res: Response) {
+  async toggleTaskDone(req: AuthenticatedRequest, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
-      const task = await this.taskService.toggleTaskCompleted(id);
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+      const task = await this.taskService.toggleTaskCompleted(id, userId);
       res.json(task);
     } catch (error: any) {
       if (error.message === 'Task not found') {

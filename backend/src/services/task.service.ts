@@ -26,10 +26,13 @@ export class TaskService {
     }
   }
 
-  async getTaskById(id: number) {
+  async getTaskById(id: number, userId: number) {
     try {
-      const task = await prisma.task.findUnique({
-        where: { id }
+      const task = await prisma.task.findFirst({
+        where: { 
+          id,
+          userId 
+        }
       });
 
       if (!task) {
@@ -59,8 +62,9 @@ async createTask(data: CreateTaskInput) {
   }
 }
 
-  async updateTask(id: number, data: UpdateTaskInput) {
+  async updateTask(id: number, userId: number, data: UpdateTaskInput) {
     try {
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.update({
         where: { id },
         data
@@ -71,8 +75,9 @@ async createTask(data: CreateTaskInput) {
     }
   }
 
-  async deleteTask(id: number) {
+  async deleteTask(id: number, userId: number) {
     try {
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.delete({
         where: { id }
       });
@@ -82,9 +87,9 @@ async createTask(data: CreateTaskInput) {
     }
   }
 
-  async toggleTaskCompleted(id: number) {
+  async toggleTaskCompleted(id: number, userId: number) {
     try {
-      const task = await this.getTaskById(id);
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.update({
         where: { id },
         data: {

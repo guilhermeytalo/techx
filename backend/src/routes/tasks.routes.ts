@@ -1,12 +1,6 @@
-import { Router, Request, Response, RequestHandler } from 'express';
+import { Router, RequestHandler } from 'express';
 import { TaskController } from '../controllers/task.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
-
-interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: number;
-  };
-}
 
 const router = Router();
 const taskController = new TaskController();

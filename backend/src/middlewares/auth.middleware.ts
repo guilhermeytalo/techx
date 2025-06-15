@@ -19,10 +19,14 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   const authHeader = req.headers['authorization'];
   const token = authHeader?.split(' ')[1];
 
-  if (!token) return res.sendStatus(401);
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if (err) {
+      return res.status(403).json({ error: 'Invalid or expired token' });
+    }
     req.user = user;
     next();
   });

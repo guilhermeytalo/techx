@@ -19,7 +19,13 @@ export interface UpdateTaskInput {
 export class TaskService {
   async getAllTasks(userId: number) {
     try {
-      return await prisma.task.findMany({ where: { userId } });
+      return await prisma.task.findMany({ 
+        where: { 
+          user: {
+            id: userId
+          }
+        } 
+      });
     } catch (error) {
       logger.error('Error in TaskService.getAllTasks:', error);
       throw error;
@@ -31,7 +37,9 @@ export class TaskService {
       const task = await prisma.task.findFirst({
         where: { 
           id,
-          userId 
+          user: {
+            id: userId
+          }
         }
       });
 
@@ -46,21 +54,25 @@ export class TaskService {
     }
   }
 
-async createTask(data: CreateTaskInput) {
-  try {
-    return await prisma.task.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        completed: data.completed ?? false,
-        userId: data.userId
-      }
-    });
-  } catch (error) {
-    logger.error('Error in TaskService.createTask:', error);
-    throw error;
+  async createTask(data: CreateTaskInput) {
+    try {
+      return await prisma.task.create({
+        data: {
+          title: data.title,
+          description: data.description,
+          completed: data.completed ?? false,
+          user: {
+            connect: {
+              id: data.userId
+            }
+          }
+        }
+      });
+    } catch (error) {
+      logger.error('Error in TaskService.createTask:', error);
+      throw error;
+    }
   }
-}
 
   async updateTask(id: number, userId: number, data: UpdateTaskInput) {
     try {

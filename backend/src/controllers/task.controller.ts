@@ -15,7 +15,8 @@ export class TaskController {
 
   async getAllTasks(_req: Request, res: Response) {
     try {
-      const tasks = await this.taskService.getAllTasks();
+      const userId = _req.user?.userId; 
+      const tasks = await this.taskService.getAllTasks(userId);
       res.json(tasks);
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -25,7 +26,9 @@ export class TaskController {
   async createTask(req: Request, res: Response) {
     try {
       const { title, description, completed } = req.body;
-      const task = await this.taskService.createTask({ title, description, completed });
+      const userId = req.user?.userId;
+
+      const task = await this.taskService.createTask({ title, description, completed, userId });
       res.status(201).json(task);
     } catch (error: any) {
       res.status(500).json({ error: 'Failed to create task' });

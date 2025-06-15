@@ -7,6 +7,7 @@ export interface CreateTaskInput {
   title: string;
   description?: string;
   completed?: boolean;
+  userId: number;
 }
 
 export interface UpdateTaskInput {
@@ -16,9 +17,9 @@ export interface UpdateTaskInput {
 }
 
 export class TaskService {
-  async getAllTasks() {
+  async getAllTasks(userId: number) {
     try {
-      return await prisma.task.findMany();
+      return await prisma.task.findMany({ where: { userId } });
     } catch (error) {
       logger.error('Error in TaskService.getAllTasks:', error);
       throw error;
@@ -42,20 +43,21 @@ export class TaskService {
     }
   }
 
-  async createTask(data: CreateTaskInput) {
-    try {
-      return await prisma.task.create({
-        data: {
-          title: data.title,
-          description: data.description,
-          completed: data.completed ?? false
-        }
-      });
-    } catch (error) {
-      logger.error('Error in TaskService.createTask:', error);
-      throw error;
-    }
+async createTask(data: CreateTaskInput) {
+  try {
+    return await prisma.task.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        completed: data.completed ?? false,
+        userId: data.userId
+      }
+    });
+  } catch (error) {
+    logger.error('Error in TaskService.createTask:', error);
+    throw error;
   }
+}
 
   async updateTask(id: number, data: UpdateTaskInput) {
     try {

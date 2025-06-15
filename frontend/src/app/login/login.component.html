@@ -1,27 +1,70 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100">
-  <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+  <p-toast />
+  <p-card class="w-full max-w-md">
+    <ng-template pTemplate="header">
+      <div class="text-center">
+        <h2 class="text-2xl font-bold text-gray-800">Login</h2>
+      </div>
+    </ng-template>
 
     <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
       <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <p-input id="email" type="email" formControlName="email"
-               class="p-inputtext p-component w-full" placeholder="Enter your email" />
+        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">username</label>
+        <input 
+          pInputText 
+          id="username" 
+          type="username" 
+          formControlName="username"
+          class="w-full" 
+          placeholder="Enter your username" 
+        />
+        <small 
+          *ngIf="form.get('username')?.invalid && form.get('username')?.touched" 
+          class="p-error block mt-1"
+        >
+          Please enter a valid username address
+        </small>
       </div>
 
       <div>
-        <p-label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-        <p-input id="password" type="password" formControlName="password"
-               class="p-inputtext p-component w-full" placeholder="Enter your password" />
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+        <p-password 
+          id="password" 
+          formControlName="password"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          placeholder="Enter your password"
+        ></p-password>
+        <small 
+          *ngIf="form.get('password')?.invalid && form.get('password')?.touched" 
+          class="p-error block mt-1"
+        >
+          Password is required
+        </small>
       </div>
 
-      <button pButton type="submit" label="Login"
-              class="w-full p-button p-button-primary" [disabled]="form.invalid"></button>
+      <button 
+        pButton 
+        type="submit" 
+        label="Login"
+        class="w-full" 
+        [disabled]="form.invalid"
+        [loading]="isLoading"
+      ></button>
     </form>
 
-    <div class="text-center mt-4">
-      <span class="text-sm text-gray-600">Don't have an account?</span>
-      <p-button routerLink="/register" class="text-blue-500 hover:underline ml-1">Create one</a>
-    </div>
-  </div>
+    <ng-template pTemplate="footer">
+      <div class="text-center">
+        <span class="text-sm text-gray-600">Don't have an account?</span>
+        <button 
+          pButton 
+          label="Create Account" 
+          class="p-button-link ml-2" 
+          (click)="navigateToRegister()"
+        ></button>
+      </div>
+    </ng-template>
+  </p-card>
 </div>

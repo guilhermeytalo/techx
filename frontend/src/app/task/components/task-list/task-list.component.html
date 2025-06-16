@@ -10,9 +10,13 @@
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
-            <div class="flex items-center justify-center">
-                <p>No momento não há tarefas cadastradas.</p>
-            </div>
+            <tr>
+                <td [attr.colspan]="5">
+                    <div class="flex justify-center items-center py-4">
+                        <span>No momento não há tarefas cadastradas.</span>
+                    </div>
+                </td>
+            </tr>
         </ng-template>
 
         <ng-template #header>

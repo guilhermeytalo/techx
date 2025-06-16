@@ -7,6 +7,7 @@ export interface CreateTaskInput {
   title: string;
   description?: string;
   completed?: boolean;
+  userId: number;
 }
 
 export interface UpdateTaskInput {
@@ -16,19 +17,30 @@ export interface UpdateTaskInput {
 }
 
 export class TaskService {
-  async getAllTasks() {
+  async getAllTasks(userId: number) {
     try {
-      return await prisma.task.findMany();
+      return await prisma.task.findMany({ 
+        where: { 
+          user: {
+            id: userId
+          }
+        } 
+      });
     } catch (error) {
       logger.error('Error in TaskService.getAllTasks:', error);
       throw error;
     }
   }
 
-  async getTaskById(id: number) {
+  async getTaskById(id: number, userId: number) {
     try {
-      const task = await prisma.task.findUnique({
-        where: { id }
+      const task = await prisma.task.findFirst({
+        where: { 
+          id,
+          user: {
+            id: userId
+          }
+        }
       });
 
       if (!task) {
@@ -48,7 +60,12 @@ export class TaskService {
         data: {
           title: data.title,
           description: data.description,
-          completed: data.completed ?? false
+          completed: data.completed ?? false,
+          user: {
+            connect: {
+              id: data.userId
+            }
+          }
         }
       });
     } catch (error) {
@@ -57,8 +74,9 @@ export class TaskService {
     }
   }
 
-  async updateTask(id: number, data: UpdateTaskInput) {
+  async updateTask(id: number, userId: number, data: UpdateTaskInput) {
     try {
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.update({
         where: { id },
         data
@@ -69,8 +87,9 @@ export class TaskService {
     }
   }
 
-  async deleteTask(id: number) {
+  async deleteTask(id: number, userId: number) {
     try {
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.delete({
         where: { id }
       });
@@ -80,9 +99,9 @@ export class TaskService {
     }
   }
 
-  async toggleTaskCompleted(id: number) {
+  async toggleTaskCompleted(id: number, userId: number) {
     try {
-      const task = await this.getTaskById(id);
+      const task = await this.getTaskById(id, userId);
       return await prisma.task.update({
         where: { id },
         data: {

@@ -6,8 +6,8 @@ Aplicação simples de gerenciamento de tarefas com backend em Node.js + Express
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-- [Angular CLi] (https://angular.dev/)
-- [NodeJs] (https://nodejs.org/en)
+- [Angular CLi](https://angular.dev/)
+- [NodeJs](https://nodejs.org/en)
 
 ---
 

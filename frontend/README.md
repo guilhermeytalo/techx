@@ -1,19 +1,19 @@
-Frontend - Angular
- - [ ] Criar componente de listagem de tarefas (task-list).
+### Frontend - Angular
+ - [x] Criar componente de listagem de tarefas (task-list).
 
- - [ ] Criar componente de formulário para adicionar/editar tarefas (task-form).
+ - [x] Criar componente de formulário para adicionar/editar tarefas (task-form).
 
- - [ ] Criar serviço Angular para consumir API do backend.
+ - [x] Criar serviço Angular para consumir API do backend.
 
- - [ ] Exibir todas as tarefas na home.
+ - [x] Exibir todas as tarefas na home.
 
- - [ ] Permitir criar, editar, remover, marcar como concluída.
+ - [x] Permitir criar, editar, remover, marcar como concluída.
 
- - [ ] Estilizar a interface com CSS ou biblioteca como Angular Material.
+ - [x] Estilizar a interface com CSS ou biblioteca como Angular Material.
 
 🔐 Extra:
- - [ ] Criar tela de login e registro.
+ - [x] Criar tela de login e registro.
 
- - [ ] Armazenar JWT no localStorage ou sessionStorage.
+ - [x] Armazenar JWT no localStorage ou sessionStorage.
 
-- [ ]  Proteger rotas com AuthGuard.
+- [x]  Proteger rotas com AuthGuard.
